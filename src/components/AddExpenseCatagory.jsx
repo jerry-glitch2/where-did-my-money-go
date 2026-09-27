@@ -8,6 +8,9 @@ export default function AddExpenseCatagory({
   const [addExpenseOpen, setAddExpenseOpen] = useState(false);
   const [addCatagoryOpen, setAddCatagoryOpen] = useState(false);
   const [showCatagoryWarning, setShowCatagoryWarning] = useState(false);
+  const [submittedCatagory, setSubmittedCatagory] = useState(false);
+  const [submittedExpense, setSubmittedExpense] = useState(false);
+  const [requiredForm, setRequiredForm] = useState(false);
 
   const catagoryInputRef = useRef(null);
   const amountInputRef = useRef(null);
@@ -31,7 +34,9 @@ export default function AddExpenseCatagory({
     const catagory = form.catagory.value;
     const description = form.description.value;
 
-    if (!isNaN(amount) && catagory && description) {
+    if (!isNaN(amount) && catagory) {
+      setRequiredForm(false);
+
       const newExpense = {
         id: Date.now(),
         amount,
@@ -39,6 +44,10 @@ export default function AddExpenseCatagory({
         description,
       };
       addExpense(newExpense);
+      setSubmittedExpense(true);
+      form.reset();
+    } else {
+      setRequiredForm(true);
       form.reset();
     }
   }
@@ -50,9 +59,15 @@ export default function AddExpenseCatagory({
     const catagory = form.catagory.value;
 
     if (catagory) {
+      setRequiredForm(false);
+
       const newCatagory = catagory;
       addCatagory(newCatagory);
       setShowCatagoryWarning(false);
+      setSubmittedCatagory(true);
+      form.reset();
+    } else {
+      setRequiredForm(true);
       form.reset();
     }
   }
@@ -72,9 +87,7 @@ export default function AddExpenseCatagory({
       >
         Add expense
       </button>
-      {showCatagoryWarning && (
-        <p className="catagory-warning">create a catagory first</p>
-      )}
+
       {addExpenseOpen && (
         <div
           className="add-expense-form"
@@ -86,6 +99,9 @@ export default function AddExpenseCatagory({
             onClick={(e) => e.stopPropagation()}
           >
             <h2>Add expense</h2>
+            {requiredForm && (
+              <p className="form-warning">Please fill in the required filds.</p>
+            )}
 
             <label>
               {" "}
@@ -120,6 +136,9 @@ export default function AddExpenseCatagory({
             <button type="submit" className="save-expense-button">
               Save expense
             </button>
+            {submittedExpense && (
+              <p className="saved-expense">Sucessfully saved!</p>
+            )}
             <button
               type="button"
               className="close-expense-button"
@@ -147,6 +166,10 @@ export default function AddExpenseCatagory({
             onClick={(e) => e.stopPropagation()}
           >
             <h2>Add category</h2>
+            {requiredForm && (
+              <p className="form-warning">Please fill in the required filds.</p>
+            )}
+
             <label>
               Catagory name:
               <input
@@ -159,6 +182,9 @@ export default function AddExpenseCatagory({
             <button type="submit" className="save-catagory-button">
               save catagory
             </button>
+            {submittedCatagory && (
+              <p className="saved-catagory">Sucessfully saved!</p>
+            )}
             <button
               type="button"
               className="close-catagory-button"
@@ -168,6 +194,9 @@ export default function AddExpenseCatagory({
             </button>
           </form>
         </div>
+      )}
+      {showCatagoryWarning && (
+        <p className="catagory-warning">create a catagory first</p>
       )}
     </div>
   );

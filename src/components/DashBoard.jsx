@@ -40,17 +40,17 @@ export default function Dashboard({ catagories, search, setSearch }) {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
+        <nav ref={navRef} className={menuOpen ? "nav-open" : "nav-closed"}>
+          {catagories.map((catagory) => (
+            <li href="/catagory" key={catagory}>
+              {catagory}
+            </li>
+          ))}
+          {catagories.length === 0 && (
+            <p className="no-catagory-message">No catagories yet!</p>
+          )}
+        </nav>
       </header>
-      <nav ref={navRef} className={menuOpen ? "nav-open" : "nav-closed"}>
-        {catagories.map((catagory) => (
-          <a href="/catagory" key={catagory}>
-            {catagory}
-          </a>
-        ))}
-        {catagories.length === 0 && (
-          <p className="no-catagory-message">No catagories yet!</p>
-        )}
-      </nav>
     </>
   );
 }
